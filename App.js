@@ -1,13 +1,48 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+import {AppLoading} from 'expo'
+import * as Font from 'expo-font'
+// redux
+import {createStore, combineReducers} from 'redux'
+import {Provider} from 'react-redux'
+import productReducer from './store/reducers/productReducer'
+import cartReducer from './store/reducers/cartReducer'
+
+// navigations
+import ShopNavigator from './navigations/ShopNavigator'
+
+
+const FetchFonts = () => {
+  return Font.loadAsync({
+    'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf'),
+    'nunito-bold': require('./assets/fonts/Nunito-Bold.ttf'),
+    'nunito-light': require('./assets/fonts/Nunito-Light.ttf')
+  })
+}
+
+const rootReducer = combineReducers({
+  products: productReducer,
+  cart: cartReducer
+})
+
+const store = createStore(rootReducer)
+
 export default function App() {
+  const [fontLoaded, setFontload] = useState(false)
+
+  if(!fontLoaded){
+    return (
+      <AppLoading startAsync = {FetchFonts} 
+        onFinish = {() => {setFontload(true)}}
+      />
+    )
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <Provider store = {store}>
+      <ShopNavigator />
+    </Provider>
   );
 }
 
