@@ -8,6 +8,7 @@ import {createStore, combineReducers} from 'redux'
 import {Provider} from 'react-redux'
 import productReducer from './store/reducers/productReducer'
 import cartReducer from './store/reducers/cartReducer'
+import orderReducer from './store/reducers/orderReducer'
 
 // navigations
 import ShopNavigator from './navigations/ShopNavigator'
@@ -23,11 +24,15 @@ const FetchFonts = () => {
 
 const rootReducer = combineReducers({
   products: productReducer,
-  cart: cartReducer
+  cart: cartReducer,
+  orders: orderReducer
+
 })
 
 const store = createStore(rootReducer)
-
+console.log("**********************************************************************************************************************************")
+console.log("CURRENT STATE", store.getState().orders)
+console.log("**********************************************************************************************************************************")
 export default function App() {
   const [fontLoaded, setFontload] = useState(false)
 

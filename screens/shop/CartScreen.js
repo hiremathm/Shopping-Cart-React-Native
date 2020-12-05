@@ -6,6 +6,7 @@ import {Ionicons} from '@expo/vector-icons'
 import Colors from '../../constants/Colors'
 import CartItem from '../../components/CartItem'
 import {removeItem} from '../../store/actions/cartAction'
+import {addOrder} from '../../store/actions/orderAction'
 
 const CartScreen = (props) => {
 	const dispatch = useDispatch()
@@ -26,6 +27,7 @@ const CartScreen = (props) => {
 	
 
 	const cartTotalAmount = useSelector(state => state.cart.totalAmount)
+
 	let cortBody;
 	if(cartItems.length === 0){
 		cortBody = <View style = {styles.emptyCart}>
@@ -51,14 +53,17 @@ const CartScreen = (props) => {
 			</View>
 
 			<View style = {styles.summary}>
-				<FlatList data = {cartItems} keyExtractor = {item => item.productId} renderItem = {itemData => <CartItem  onRemove = {() => dispatch(removeItem(itemData.item.productId))} item = {itemData.item}/>} />
+				<FlatList data = {cartItems} keyExtractor = {item => item.productId} renderItem = {itemData => <CartItem  onRemove = {() => dispatch(removeItem(itemData.item.productId))} deletable item = {itemData.item}/>} />
 			</View>
 
 			<View style = {styles.summary}>
 				<Text style = {styles.summaryText}> 
 					Total : <Text style = {styles.amount}>$ {cartTotalAmount.toFixed(2)}</Text>
 				</Text>
-				<Button color = {Colors.accent} title = "Order Now" disabled = {cartItems.length === 0} onPress = {() => console.log("ORDER NOW")}/>
+				<Button color = {Colors.accent} title = "Order Now" disabled = {cartItems.length === 0} onPress = {() => {
+					dispatch(addOrder(cartItems, cartTotalAmount))
+				}}/>
+				
 			</View>
 		</View>
 	}
@@ -141,7 +146,7 @@ const styles = StyleSheet.create({
 })
 
 CartScreen.navigationOptions = {
-	headerTitle: 'Cart'
+	headerTitle: 'Your Cart'
 }
 
 export default CartScreen;

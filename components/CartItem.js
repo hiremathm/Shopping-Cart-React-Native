@@ -10,9 +10,9 @@ const CartItem = (props) => {
 			<Text numberOfLines={2} style = {styles.mainText}>{props.item.quantity}</Text>
 			<Text numberOfLines={2} style = {styles.mainText}>{props.item.productPrice.toFixed(2)}</Text>
 			<Text numberOfLines={2} style = {styles.mainText}>{props.item.sum.toFixed(2)}</Text>
-			<TouchableOpacity onPress = {props.onRemove}>
-				<Ionicons name = {Platform.OS === 'android' ? "md-trash" : "ios-trash"} color = "red" size = {25}/>
-			</TouchableOpacity>
+			{props.deletable && <TouchableOpacity onPress = {props.onRemove}>
+							<Ionicons name = {Platform.OS === 'android' ? "md-trash" : "ios-trash"} color = "red" size = {25}/>
+						</TouchableOpacity>}
 		</View>
 	)
 }
