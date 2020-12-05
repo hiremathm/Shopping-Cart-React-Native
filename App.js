@@ -31,7 +31,7 @@ const rootReducer = combineReducers({
 
 const store = createStore(rootReducer)
 console.log("**********************************************************************************************************************************")
-console.log("CURRENT STATE", store.getState().orders)
+// console.log("CURRENT STATE", store.getState().orders)
 console.log("**********************************************************************************************************************************")
 export default function App() {
   const [fontLoaded, setFontload] = useState(false)

@@ -9,6 +9,15 @@ import {useSelector} from 'react-redux'
 
 const OrderScreen  = (props) => {
 	const orders = useSelector(state => state.orders.orders)
+
+	if(orders.length === 0){
+		return (
+			<View style = {styles.screen}>
+				<Text style = {styles.textItem}>Sorry, No orders found.</Text>
+			</View>
+		)
+	}
+
 	return (
 		<View>
 			<FlatList data = {orders} keyExtractor = {item => item.id} renderItem = {itemData => <OrderItem amount = {itemData.item.totalAmount} date = {itemData.item.readableDate} items = {itemData.item.items} />}/>
@@ -30,6 +39,10 @@ const styles = StyleSheet.create({
 		flex: 1, 
 		justifyContent: 'center',
 		alignItems: 'center'
+	},
+	textItem: {
+		fontFamily: 'nunito-bold',
+		fontSize: 30
 	}
 })
 

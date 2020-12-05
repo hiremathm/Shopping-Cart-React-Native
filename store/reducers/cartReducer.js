@@ -7,7 +7,7 @@ const initialState = {
 }
 
 import {ADD_TO_CART, REMOVE_ITEM} from '../actions/cartAction'
-
+import {REMOVE_PRODUCT} from '../actions/productAction'
 
 export default (state = initialState, action) => {
 	switch(action.type){
@@ -58,7 +58,20 @@ export default (state = initialState, action) => {
 			}
 		case ADD_ORDER: 
 			return initialState
+		case REMOVE_PRODUCT: 
+			if(!state.items[action.productId]){
+				return state
+			}
+			const updatedItems = {...state.items}
 
+			const itemTotal = state.items[action.productId].sum
+			delete updatedItems[action.productId]
+
+			return {
+				...state,
+				items: updatedItems,
+				totalAmount: state.totalAmount - itemTotal
+			}
 		default: 
 			return state
 	}

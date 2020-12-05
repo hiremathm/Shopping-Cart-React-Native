@@ -8,7 +8,7 @@ const CartItem = (props) => {
 		<View style = {styles.cartItem}>
 			<Text numberOfLines={2} style = {{width: 70, fontFamily: 'nunito-bold', fontSize: 16}}>{props.item.productTitle}</Text>
 			<Text numberOfLines={2} style = {styles.mainText}>{props.item.quantity}</Text>
-			<Text numberOfLines={2} style = {styles.mainText}>{props.item.productPrice.toFixed(2)}</Text>
+			<Text numberOfLines={2} style = {styles.mainText}>{(Math.round(props.item.productPrice.toFixed(2)) * 100) / 100}</Text>
 			<Text numberOfLines={2} style = {styles.mainText}>{props.item.sum.toFixed(2)}</Text>
 			{props.deletable && <TouchableOpacity onPress = {props.onRemove}>
 							<Ionicons name = {Platform.OS === 'android' ? "md-trash" : "ios-trash"} color = "red" size = {25}/>
