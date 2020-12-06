@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useCallback, useReducer} from 'react' 
-import {View, Text, StyleSheet, TextInput, ScrollView, Button,Alert} from 'react-native'
+import {View, Text, StyleSheet, TextInput, ScrollView, Button,Alert, ActivityIndicator} from 'react-native'
 import {HeaderButtons, Item} from 'react-navigation-header-buttons'
 import HeaderButton from '../../components/UI/HeaderButton'
 
@@ -8,6 +8,7 @@ import {useSelector, useDispatch} from 'react-redux'
 import {addProduct, updateProduct} from '../../store/actions/productAction'
 import Input from '../../components/UI/Input'
 
+import Colors from '../../constants/Colors'
 
 const FORM_INPUT_UPDATE = 'FORM_INPUT_UPDATE'
 
@@ -35,14 +36,16 @@ const formReducer = (state, action) => {
 			inputValidities: updatedValidities
 		}
 
-		console.log("formvalue", formValue)
-
 		return formValue
 	}
 	return state
 }
 
 const EditProductScreen = (props) => {
+
+	const [isLoading, setIsLoading] = useState(false)
+	const [errorText, setErrorText] = useState()
+
 	const dispatch = useDispatch()
 
 	const productId = props.navigation.getParam('productId')
@@ -66,6 +69,12 @@ const EditProductScreen = (props) => {
 	})
 
 
+	useEffect(() => {
+		if(errorText){
+			Alert.alert('Opps! Something went wrong',errorText, [{text: 'Okay'}])
+		}		
+	},[errorText])
+
 	const disabled = (product ? false : true)
 
 	// const [title, setTitle] = useState(product ? product.title : '')
@@ -73,7 +82,7 @@ const EditProductScreen = (props) => {
 	// const [price, setPrice] = useState(product ? product.price.toString() : '')
 	// const [description, setDescription] = useState(product ? product.description : '')
 
-	const onSubmitHandler = useCallback(() => {
+	const onSubmitHandler = useCallback(async () => {
 
 		if(!formState.formIsValid){
 			Alert.alert('Wrong Input!','Please check the errors in the form.',[{text: 'Okay'}])
@@ -87,17 +96,26 @@ const EditProductScreen = (props) => {
 			price: +formState.inputValues.price
 		}
 
-		if(product){
-			dispatch(updateProduct({
-				id: productId, 
-				title: formState.inputValues.title, 
-				imageUrl: formState.inputValues.imageUrl, 
-				description: formState.inputValues.description, 
-				price: +formState.inputValues.price
-			}))
-		}else{
-			dispatch(addProduct(newProduct))
+		setErrorText(null)
+		setIsLoading(true)
+
+		try{
+			if(product){
+				await dispatch(updateProduct({
+					id: productId, 
+					title: formState.inputValues.title, 
+					imageUrl: formState.inputValues.imageUrl, 
+					description: formState.inputValues.description, 
+					price: +formState.inputValues.price
+				}))
+			}else{
+				await dispatch(addProduct(newProduct))
+			}
+		}catch(error){
+			setErrorText(error.message)
 		}
+
+		setIsLoading(false)
 		props.navigation.goBack()
 
 	},[dispatch, productId, formState])
@@ -120,6 +138,14 @@ const EditProductScreen = (props) => {
 		},[dispatchFormState])
 
 	// console.log("product is ", product)
+
+	if(isLoading){
+		return (
+			<View style = {styles.loadSpinner}>
+				<ActivityIndicator size = "large" color = {Colors.primary}/>
+			</View>
+		)
+	}
 
 	return (
 		<ScrollView>
@@ -211,6 +237,23 @@ const EditProductScreen = (props) => {
 const styles = StyleSheet.create({
 	form: {
 		margin: 20
+	},
+	loadSpinner: {
+	    flex: 1, 
+	    justifyContent: 'center',
+	    alignItems: 'center',
+	    margin: 20
+	},
+		noProductFoundText: {
+		fontFamily: 'nunito-bold',
+		fontSize: 25,
+		margin: 10
+	},
+		addProductText: {
+		fontFamily: 'nunito-bold',
+		fontSize: 18,
+		margin: 10,
+		color: '#888'
 	}
 })
 

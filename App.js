@@ -4,16 +4,19 @@ import { StyleSheet, Text, View } from 'react-native';
 import {AppLoading} from 'expo'
 import * as Font from 'expo-font'
 // redux
-import {createStore, combineReducers} from 'redux'
+import {createStore, combineReducers, applyMiddleware} from 'redux'
 import {Provider} from 'react-redux'
+import ReduxThunk from 'redux-thunk'
+
+// Reducers
 import productReducer from './store/reducers/productReducer'
 import cartReducer from './store/reducers/cartReducer'
 import orderReducer from './store/reducers/orderReducer'
 
-// navigations
+// Navigations
 import ShopNavigator from './navigations/ShopNavigator'
 
-
+// Load fonts
 const FetchFonts = () => {
   return Font.loadAsync({
     'nunito-regular': require('./assets/fonts/Nunito-Regular.ttf'),
@@ -22,6 +25,7 @@ const FetchFonts = () => {
   })
 }
 
+// Combine reducers
 const rootReducer = combineReducers({
   products: productReducer,
   cart: cartReducer,
@@ -29,10 +33,12 @@ const rootReducer = combineReducers({
 
 })
 
-const store = createStore(rootReducer)
+// Create Store
+const store = createStore(rootReducer,applyMiddleware(ReduxThunk))
+/*
 console.log("**********************************************************************************************************************************")
-// console.log("CURRENT STATE", store.getState().orders)
-console.log("**********************************************************************************************************************************")
+console.log("STARTING APPLICATIONS")
+console.log("**********************************************************************************************************************************")*/
 export default function App() {
   const [fontLoaded, setFontload] = useState(false)
 

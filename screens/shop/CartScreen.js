@@ -1,5 +1,5 @@
-import React from 'react'
-import {View, Text, StyleSheet, Button, FlatList, TouchableWithoutFeedback, ImageBackground} from 'react-native'
+import React,{useState} from 'react'
+import {View, Text, StyleSheet, Button, FlatList, TouchableWithoutFeedback, ImageBackground, ActivityIndicator} from 'react-native'
 import {useSelector, useDispatch} from 'react-redux'
 import {Ionicons} from '@expo/vector-icons'
 
@@ -9,6 +9,8 @@ import {removeItem} from '../../store/actions/cartAction'
 import {addOrder} from '../../store/actions/orderAction'
 
 const CartScreen = (props) => {
+	const [isLoading, setIsLoading] = useState(false)
+
 	const dispatch = useDispatch()
 
 	const cartItems = useSelector(state => {
@@ -27,6 +29,12 @@ const CartScreen = (props) => {
 	
 
 	const cartTotalAmount = useSelector(state => state.cart.totalAmount)
+
+	const sendOrderHandler = async () => {
+		setIsLoading(true)
+		await dispatch(addOrder(cartItems, cartTotalAmount))
+		setIsLoading(false)
+	}
 
 	let cortBody;
 	if(cartItems.length === 0){
@@ -60,13 +68,17 @@ const CartScreen = (props) => {
 				<Text style = {styles.summaryText}> 
 					Total : <Text style = {styles.amount}>$ {cartTotalAmount.toFixed(2)}</Text>
 				</Text>
-				<Button color = {Colors.accent} title = "Order Now" disabled = {cartItems.length === 0} onPress = {() => {
-					dispatch(addOrder(cartItems, cartTotalAmount))
-				}}/>
-				
+				{
+					isLoading ? 
+					<ActivityIndicator size = "small" color = {Colors.primary}/> 
+					: 
+					<Button color = {Colors.accent} title = "Order Now" disabled = {cartItems.length === 0} onPress = {sendOrderHandler}/>
+				}
 			</View>
 		</View>
 	}
+
+
 
 	return <View style = {styles.screen}>
 		{cortBody}
