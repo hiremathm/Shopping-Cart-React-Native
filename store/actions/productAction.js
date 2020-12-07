@@ -48,9 +48,11 @@ export const removeProduct = (productId) => {
 }
 
 export const addProduct = (product) => {
-	return async dispatch => {
+	return async (dispatch,getState) => {
 		// Write any async code in here
-		const response = await fetch("https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products.json",{
+    let token = getState().auth.token
+
+		const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products.json?auth=${token}`,{
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -75,9 +77,11 @@ export const addProduct = (product) => {
 }
 
 export const updateProduct = (product) => {
-	return async dispatch => {
+	return async (dispatch,getState) => {
+    let token = getState().auth.token
+   
     try{
-      const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products/${product.id}.json`,{
+      const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products/${product.id}.json?auth=${token}`,{
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json'

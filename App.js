@@ -12,6 +12,7 @@ import ReduxThunk from 'redux-thunk'
 import productReducer from './store/reducers/productReducer'
 import cartReducer from './store/reducers/cartReducer'
 import orderReducer from './store/reducers/orderReducer'
+import authReducer from './store/reducers/authReducer'
 
 // Navigations
 import ShopNavigator from './navigations/ShopNavigator'
@@ -29,8 +30,8 @@ const FetchFonts = () => {
 const rootReducer = combineReducers({
   products: productReducer,
   cart: cartReducer,
-  orders: orderReducer
-
+  orders: orderReducer,
+  auth: authReducer
 })
 
 // Create Store
