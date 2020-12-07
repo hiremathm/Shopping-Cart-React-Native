@@ -21,7 +21,7 @@ const OrderScreen  = (props) => {
 			await dispatch(orderActions.fetchOrders())
 
 		}catch(error) {
-			console.log("error", errors)
+			console.log("error", error)
 		}
 		setIsLoading(false)
 	},[dispatch])
@@ -36,7 +36,6 @@ const OrderScreen  = (props) => {
 
 	useEffect(() => {
 		loadOrders()
-
 	},[dispatch, loadOrders])
 
 
@@ -48,13 +47,13 @@ const OrderScreen  = (props) => {
 		)
 	}
 
-	// if(orders.length === 0){
-	// 	return (
-	// 		<View style = {styles.screen}>
-	// 			<Text style = {styles.textItem}>Sorry, No orders found.</Text>
-	// 		</View>
-	// 	)
-	// }
+	if(orders.length === 0){
+		return (
+			<View style = {styles.screen}>
+				<Text style = {styles.textItem}>Sorry, No orders found.</Text>
+			</View>
+		)
+	}
 
 	return (
 		<View>

@@ -7,12 +7,13 @@ import Product from '../../models/Product'
 
 export const fetchProducts = () => {
 
-	return async dispatch => {
+	return async (dispatch,getState) => {
 		// Write any async code in here
+    let userId = getState().auth.userId
+    let token = getState().auth.token
 		try {
-      const response = await fetch("https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products.json")
+      const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products.json??auth=${token}`)
  
-  
       if(!response.ok){
         throw new Error("Something went wrong!")
       }else{
@@ -20,12 +21,13 @@ export const fetchProducts = () => {
         let loadedProducts = []
 
         for(const key in responseData){
-          loadedProducts.push(new Product(key, 'u1',responseData[key].title, responseData[key].imageUrl, responseData[key].description, responseData[key].price))
+          loadedProducts.push(new Product(key, responseData[key].ownerId, responseData[key].title, responseData[key].imageUrl, responseData[key].description, responseData[key].price))
         }
 
         dispatch({
           type: SET_PRODUCTS,
-          products: loadedProducts
+          products: loadedProducts,
+          userProducts: loadedProducts.filter(product => product.ownerId === userId)
         })
       }
     }catch(error){
@@ -35,11 +37,14 @@ export const fetchProducts = () => {
 }
 
 export const removeProduct = (productId) => {
-	return async dispatch => {
-    const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products/${productId}.json`,{
+	return async (dispatch,getState) => {
+    let token = getState().auth.token
+    const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`,{
       method: 'DELETE'
     })
 
+    const responseData = await response.json()
+  
     dispatch({
       type: REMOVE_PRODUCT,
       productId: productId
@@ -51,8 +56,9 @@ export const addProduct = (product) => {
 	return async (dispatch,getState) => {
 		// Write any async code in here
     let token = getState().auth.token
+    const userId = getState().auth.userId
 
-		const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products.json?auth=${token}`,{
+  	const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/products.json?auth=${token}`,{
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json'
@@ -61,14 +67,15 @@ export const addProduct = (product) => {
 				title: product.title,
 				description: product.description,
 				imageUrl: product.imageUrl,
-				price: product.price
+				price: product.price,
+        ownerId: userId
 			}) 
 		})
 
 		const responseData = await response.json()
 
-		// console.log("firebase post product response", responseData)
 		product['id'] = responseData['name']
+    product['ownerId'] = userId
 		dispatch({
 			type: ADD_PRODUCT,
 			product: product

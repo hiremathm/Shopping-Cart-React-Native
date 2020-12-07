@@ -76,7 +76,7 @@ const AuthScreen  = props => {
 
 	const authHandler = async () => {
 		let action;
-		console.log("EMAIL PASSWORD",formState.inputValues.email, formState.inputValues.password)
+		// console.log("IN AUTH SCREEN EMAIL PASSWORD",formState.inputValues.email, formState.inputValues.password)
 		if(isSignup){
 			action = AuthActions.signup(formState.inputValues.email, formState.inputValues.password)
 		}else{
