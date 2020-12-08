@@ -1,8 +1,5 @@
 import Product from '../models/Product';
 
-
-console.log("product", Product.new)
-
 export const PRODUCTS = [
   new Product(
     'p1',

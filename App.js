@@ -15,7 +15,7 @@ import orderReducer from './store/reducers/orderReducer'
 import authReducer from './store/reducers/authReducer'
 
 // Navigations
-import ShopNavigator from './navigations/ShopNavigator'
+import NavigationContainer from './navigations/NavigationContainer'
 
 // Load fonts
 const FetchFonts = () => {
@@ -36,10 +36,11 @@ const rootReducer = combineReducers({
 
 // Create Store
 const store = createStore(rootReducer,applyMiddleware(ReduxThunk))
-/*
-console.log("**********************************************************************************************************************************")
-console.log("STARTING APPLICATIONS")
-console.log("**********************************************************************************************************************************")*/
+
+
+// console.log("**********************************************************************************************************************************")
+// console.log("STARTING APPLICATIONS")
+// console.log("**********************************************************************************************************************************")
 export default function App() {
   const [fontLoaded, setFontload] = useState(false)
 
@@ -53,7 +54,7 @@ export default function App() {
 
   return (
     <Provider store = {store}>
-      <ShopNavigator />
+      <NavigationContainer />
     </Provider>
   );
 }

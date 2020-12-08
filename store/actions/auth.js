@@ -4,17 +4,39 @@ export const SIGNUP = 'SIGNUP'
 export const SIGNIN = 'SIGNIN'
 export const AUTHENTICATION = 'AUTHENTICATION'
 export const LOGOUT = 'LOGOUT'
-
-export const authenticate = (token , userId) => {
-	return {
-		type: AUTHENTICATION,
-		token: token,
-		userId: userId
-	}
+let timer;
+export const authenticate = (token , userId, expiryTime) => {
+	console.log("TIMER IN AUTHENTICATION", expiryTime)
+	return dispatch => {
+		dispatch(setLogoutTimer(expiryTime))
+		dispatch({
+			type: AUTHENTICATION,
+			token: token,
+			userId: userId
+		})
+	} 
 }
 
 export const logout = (token, userId) => {
-	return {type: LOGOUT}	
+	clearLogoutTimer()
+	AsyncStorage.removeItem('userData')
+	return {type: LOGOUT}
+}
+
+const setLogoutTimer = (expiryTime) => {
+	console.log("TIMER IN SET LOGOUT", expiryTime)
+	return dispatch => {
+		timer = setTimeout(() => {
+			dispatch(logout())
+		}, expiryTime)
+	}
+}
+
+const clearLogoutTimer = () => {
+	console.log("CLEARING TIME", timer)
+	if (timer){
+		clearTimeout(timer)
+	}
 }
 
 export const signup = (email, password) => {
@@ -48,16 +70,16 @@ export const signup = (email, password) => {
 
 		const responseData = await response.json()
 		// console.log("SIGNUP RESPONSE",responseData)
-		dispatch({
-			type: SIGNUP,
-			token: responseData.idToken,
-			userId: responseData.localId,
-			email: email
-		})
+		// dispatch({
+		// 	type: SIGNUP,
+		// 	token: responseData.idToken,
+		// 	userId: responseData.localId,
+		// 	email: email
+		// })
 
-		// dispatch(authenticate(responseData.idToken, responseData.localId))
+		dispatch(authenticate(responseData.idToken, responseData.localId, parseInt(responseData.expiresIn * 10)))
 
-		const expiryDate = new Date(new Date.getTime() + parseInt(responseData.expiresIn) * 1000);
+		const expiryDate = new Date(new Date.getTime() + parseInt(responseData.expiresIn) * 10);
 		saveData(responseData.idToken, responseData.localId, expiryDate)
 	}
 }
@@ -94,16 +116,16 @@ export const signin = (email, password) => {
 		const responseData = await response.json()
 
 		// console.log("SIGNIN RESPONSE",responseData)
-		dispatch({
-			type: SIGNIN,
-			token: responseData.idToken,
-			userId: responseData.localId,
-			email: email
-		})
+		// dispatch({
+		// 	type: SIGNIN,
+		// 	token: responseData.idToken,
+		// 	userId: responseData.localId,
+		// 	email: email
+		// })
 
-		// dispatch(authenticate(responseData.idToken, responseData.localId))
+		dispatch(authenticate(responseData.idToken, responseData.localId, parseInt(responseData.expiresIn) * 10))
 
-		const expiryDate = new Date(new Date().getTime() + parseInt(responseData.expiresIn) * 1000);
+		const expiryDate = new Date(new Date().getTime() + parseInt(responseData.expiresIn) * 10);
 		saveData(responseData.idToken, responseData.localId, expiryDate)
 	}
 }
