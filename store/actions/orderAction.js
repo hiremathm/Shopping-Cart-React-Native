@@ -41,7 +41,7 @@ export const addOrder = (cartItems, totalAmount) => {
 	return async (dispatch, getState) => {
     const token = getState().auth.token
     const userId = getState().auth.userId
-    console.log("USER ID AND TOKEN ",userId, token)
+    // console.log("USER ID AND TOKEN ",userId, token)
 		const response = await fetch(`https://shoppingapplicationreactnative-default-rtdb.firebaseio.com/orders/${userId}.json?auth=${token}`,{
 			method: 'POST',
 			headers: {
@@ -63,5 +63,30 @@ export const addOrder = (cartItems, totalAmount) => {
       totalAmount: totalAmount,
       date: date
 		})
+
+    for(const cartItem in cartItems){
+      const pushToken = cartItems[cartItem].pushToken
+      const title = cartItems[cartItem].productTitle
+      const price = cartItems[cartItem].productPrice
+      const date = new Date().toISOString()
+      const quantity = cartItems[cartItem].quantity
+      const totalAmount = cartItems[cartItem].sum
+
+      const pushResponse = await fetch("https://exp.host/--/api/v2/push/send",{
+        method: 'POST',
+        headers: {
+          'Accept': 'applicaiton/json',
+          'Accept-Encoding': 'gzip',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "to": pushToken,
+          "title": "Order Notification",
+          "body": `Dear User, \n\n  You have got one order.\n\n  Product Title: ${title}\n  Quantity: ${quantity}\n  Product price : $ ${price}\n  Order Date: ${date}\n  Order Amount: $ ${totalAmount}\n\nThank You,\nShopping Team`
+        }) 
+      })
+      const pushResponseData = await pushResponse.json()
+      console.log("PUSH RESPONSE", pushResponseData)
+    }
 	}
 }

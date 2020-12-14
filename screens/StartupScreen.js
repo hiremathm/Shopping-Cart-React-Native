@@ -26,7 +26,7 @@ const StartupScreen = (props) => {
 				props.navigation.navigate('Auth')
 				return;				
 			}
-			let expiryTime = (expirationDate.getTime() - new Date().getTime()) / 10
+			let expiryTime = (expirationDate.getTime() - new Date().getTime()) / 100
 
 			props.navigation.navigate('Shop')
 			console.log("EXPIRTY TIME IN STARTUP CREEN",expiryTime)

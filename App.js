@@ -17,6 +17,18 @@ import authReducer from './store/reducers/authReducer'
 // Navigations
 import NavigationContainer from './navigations/NavigationContainer'
 
+// Notificaitons
+import * as Notificaitons from 'expo-notifications'
+
+
+Notificaitons.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true
+    }
+  }
+})
+
 // Load fonts
 const FetchFonts = () => {
   return Font.loadAsync({

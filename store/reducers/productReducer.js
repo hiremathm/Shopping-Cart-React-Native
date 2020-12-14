@@ -19,7 +19,15 @@ export default (state = initialState, action) => {
 				userProducts: action.userProducts
 			}
 		case ADD_PRODUCT: 
-			const newProduct = new Product(action.product.id, action.product.ownerId, action.product.title, action.product.imageUrl, action.product.description, action.product.price)	
+			const newProduct = new Product(
+				action.product.id, 
+				action.product.ownerId, 
+				action.product.title, 
+				action.product.imageUrl, 
+				action.product.description, 
+				action.product.price, 
+				action.product.pushToken
+			)	
 			
 			// console.log("new product", newProduct)
 
@@ -36,11 +44,13 @@ export default (state = initialState, action) => {
 			const updatedProduct = new Product(
 				action.product.id,
 				userProducts[userProductIndex].ownerId,
-				action.product.title,
+				action.product.title, 
 				action.product.imageUrl,
 				action.product.description,
-				action.product.price
+				action.product.price,
+				userProducts[userProductIndex].pushToken
 			)
+			
 			userProducts[userProductIndex] = updatedProduct
 			availableProducts[availableProductIndex] = updatedProduct
 

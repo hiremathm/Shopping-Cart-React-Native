@@ -3,6 +3,9 @@ export const ADD_PRODUCT = 'ADD_PRODUCT'
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT'
 export const SET_PRODUCTS = 'SET_PRODUCTS'
 
+import * as Notifications from 'expo-notifications'
+import * as Permissions from 'expo-permissions'
+
 import Product from '../../models/Product'
 
 export const fetchProducts = () => {
@@ -21,7 +24,7 @@ export const fetchProducts = () => {
         let loadedProducts = []
 
         for(const key in responseData){
-          loadedProducts.push(new Product(key, responseData[key].ownerId, responseData[key].title, responseData[key].imageUrl, responseData[key].description, responseData[key].price))
+          loadedProducts.push(new Product(key, responseData[key].ownerId, responseData[key].title, responseData[key].imageUrl, responseData[key].description, responseData[key].price, responseData[key].ownerToken))
         }
 
         dispatch({
@@ -54,7 +57,20 @@ export const removeProduct = (productId) => {
 
 export const addProduct = (product) => {
 	return async (dispatch,getState) => {
-		// Write any async code in here
+	  let statusObj = await Permissions.getAsync(Permissions.NOTIFICATIONS)
+    let pushToken;
+
+    if(statusObj.status !== 'granted'){
+      statusObj = await Permissions.askAsync(Permissions.NOTIFICATIONS)
+    }
+
+    if(statusObj.status !== 'granted'){
+      pushToken = null;
+    }else{
+      pushToken = (await Notifications.getExpoPushTokenAsync()).data;
+    }
+
+    // Write any async code in here
     let token = getState().auth.token
     const userId = getState().auth.userId
 
@@ -68,7 +84,8 @@ export const addProduct = (product) => {
 				description: product.description,
 				imageUrl: product.imageUrl,
 				price: product.price,
-        ownerId: userId
+        ownerId: userId,
+        ownerToken: pushToken
 			}) 
 		})
 
@@ -76,10 +93,14 @@ export const addProduct = (product) => {
 
 		product['id'] = responseData['name']
     product['ownerId'] = userId
+    product['pushToken'] = pushToken
 		dispatch({
 			type: ADD_PRODUCT,
 			product: product
 		})
+
+   console.log("PUSH TOKEN", pushToken)
+
 	}
 }
 

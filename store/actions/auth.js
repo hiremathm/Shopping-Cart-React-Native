@@ -77,9 +77,9 @@ export const signup = (email, password) => {
 		// 	email: email
 		// })
 
-		dispatch(authenticate(responseData.idToken, responseData.localId, parseInt(responseData.expiresIn * 10)))
+		dispatch(authenticate(responseData.idToken, responseData.localId, parseInt(responseData.expiresIn * 100)))
 
-		const expiryDate = new Date(new Date.getTime() + parseInt(responseData.expiresIn) * 10);
+		const expiryDate = new Date(new Date.getTime() + parseInt(responseData.expiresIn) * 100);
 		saveData(responseData.idToken, responseData.localId, expiryDate)
 	}
 }
@@ -123,9 +123,9 @@ export const signin = (email, password) => {
 		// 	email: email
 		// })
 
-		dispatch(authenticate(responseData.idToken, responseData.localId, parseInt(responseData.expiresIn) * 10))
+		dispatch(authenticate(responseData.idToken, responseData.localId, parseInt(responseData.expiresIn) * 100))
 
-		const expiryDate = new Date(new Date().getTime() + parseInt(responseData.expiresIn) * 10);
+		const expiryDate = new Date(new Date().getTime() + parseInt(responseData.expiresIn) * 100);
 		saveData(responseData.idToken, responseData.localId, expiryDate)
 	}
 }

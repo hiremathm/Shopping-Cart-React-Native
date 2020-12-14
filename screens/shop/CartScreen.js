@@ -21,7 +21,8 @@ const CartScreen = (props) => {
 				productTitle: state.cart.items[key].productTitle,
 				productPrice: state.cart.items[key].productPrice,
 				quantity: state.cart.items[key].quantity,
-				sum: state.cart.items[key].sum
+				sum: state.cart.items[key].sum,
+				pushToken: state.cart.items[key].pushToken
 			})
 		}
 		return cartItemsArray.sort((a,b) => a.productId > b.productId ? 1 : -1);
@@ -39,7 +40,7 @@ const CartScreen = (props) => {
 	let cortBody;
 	if(cartItems.length === 0){
 		cortBody = <View style = {styles.emptyCart}>
-			<Ionicons name = {Platform.OS === 'android' ? "ios-cart-outline" : "ios-cart"} color = {Colors.primary} size = {300}/>
+			<Ionicons name = {Platform.OS === 'android' ? "md-cart" : "md-cart"} color = {Colors.primary} size = {300}/>
 
 			<Text style = {styles.cartText}>Your Cart is Empty!!!</Text>
 			<Text style = {styles.addItem}>Add items to it now.</Text>
