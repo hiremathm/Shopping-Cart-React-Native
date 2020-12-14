@@ -8,7 +8,7 @@ let timer;
 export const authenticate = (token , userId, expiryTime) => {
 	console.log("TIMER IN AUTHENTICATION", expiryTime)
 	return dispatch => {
-		dispatch(setLogoutTimer(expiryTime))
+		// dispatch(setLogoutTimer(expiryTime))
 		dispatch({
 			type: AUTHENTICATION,
 			token: token,

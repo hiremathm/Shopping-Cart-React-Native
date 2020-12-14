@@ -85,6 +85,9 @@ export default function ProductsScreen(props) {
           <Button color = {Colors.accent} title = "Add to Cart" onPress={() =>{ dispatch(addToCart(itemData.item))}}/>
         </ProductItem>
       }/> 
+      <View>
+        
+      </View>
   	</View>
   );
 }

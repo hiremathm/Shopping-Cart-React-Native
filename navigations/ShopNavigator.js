@@ -15,6 +15,7 @@ import UserProductsScreen from '../screens/user/UserProductsScreen'
 import EditProductScreen from '../screens/user/EditProductScreen'
 import AuthScreen from '../screens/user/AuthScreen'
 import StartupScreen from '../screens/StartupScreen'
+import Hometab from '../screens/tabs/tabScreen'
 
 // constants
 import Colors from '../constants/Colors'
@@ -36,6 +37,18 @@ const defaultNavigationOptions = {
 		},
 		headerTintColor: Platform.OS === 'android' ? 'white' : Colors.primary 
 	}
+
+const TabStackScreen = createStackNavigator({
+	Home: {
+		screen: Hometab
+	}
+}, {
+	navigationOptions: {
+		drawerIcon: drawerConfig => <Ionicons name = {Platform.OS === 'android' ? 'md-home' : 'ios-home'} size = {30} color = {drawerConfig.tintColor}/>,
+		swipeEnabled: true
+	},
+	defaultNavigationOptions: defaultNavigationOptions
+})
 
 const ProductsStackScreen = createStackNavigator({
 	products: {
@@ -82,9 +95,10 @@ const adminStackScreen = createStackNavigator({
 
 
 const ShopNavigator = createDrawerNavigator({
+	Home: TabStackScreen,
 	Products: ProductsStackScreen,
 	Orders: OrderStackScreen,
-	Admin: adminStackScreen
+	Admin: adminStackScreen,
 }, {
 	contentOptions: {
 		activeTintColor: Colors.primary

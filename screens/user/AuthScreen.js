@@ -1,5 +1,5 @@
 import React,{useState, useEffect, useReducer, useCallback} from 'react'
-import {Text, View, Button, StyleSheet, ScrollView, KeyboardAvoidingView, ActivityIndicator, Alert} from 'react-native'
+import {Text, View, Button, StyleSheet, ScrollView, KeyboardAvoidingView, ActivityIndicator, Alert, Keyboard} from 'react-native'
 import {LinearGradient} from 'expo-linear-gradient';
 import {useDispatch} from 'react-redux'
 
@@ -75,6 +75,7 @@ const AuthScreen  = props => {
 	},[dispatchFormState])
 
 	const authHandler = async () => {
+		Keyboard.dismiss()
 		let action;
 		// console.log("IN AUTH SCREEN EMAIL PASSWORD",formState.inputValues.email, formState.inputValues.password)
 		if(isSignup){
@@ -95,14 +96,16 @@ const AuthScreen  = props => {
 
 	return (
 		<KeyboardAvoidingView 
-			behavior = "padding"
-			// keyboardVerticalOffset = {50}
+			// behavior = "padding"
+			keyboardVerticalOffset = {50}
 			style = {styles.screen}
+
+			onPress = {() => Keyboard.dismiss()}
 		>
 
 			<LinearGradient colors={['transparent','rgba(0,0,0,0.8)']} style = {styles.gradient}>
 				<View style = {{...styles.card, ...styles.authContainer}}>
-					<ScrollView>
+					{/*<ScrollView>*/}
 						<Input 
 							id = "email"
 							label = "E-Mail"
@@ -135,7 +138,7 @@ const AuthScreen  = props => {
 							}
 						</View>
 						<View style = {styles.buttonContainer}><Button title = {`Switch to ${isSignup ? 'SignIn' : 'SignUp'}`} color = {Colors.primary} onPress={() => {setIsSignup(prevState => !prevState)}}/></View>
-					</ScrollView>
+					{/*</ScrollView>*/}
 				</View>
 			</LinearGradient>
 		</KeyboardAvoidingView>
@@ -155,8 +158,9 @@ const styles = StyleSheet.create({
 	authContainer: {
 		width: '80%',
 		maxWidth: 400,
-		maxHeight: 400,
-		padding: 20
+		maxHeight: "100%",
+		padding: 20,
+		marginTop: 30
 	},
 	card: {
 		elevation: 5,
@@ -170,7 +174,7 @@ const styles = StyleSheet.create({
 	gradient: {
 		width: "100%",
 		height: "100%",
-		justifyContent: 'center',
+		// justifyContent: 'center',
 		alignItems: 'center',
 	},
 	buttonContainer:{
